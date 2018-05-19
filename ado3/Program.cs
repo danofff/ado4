@@ -32,7 +32,9 @@ namespace ado3
             //TimerFromTo();
             //TimerDataI();
             //JoinAreaTimer();
-            GroupJoinAreaTimer();
+            //GroupJoinAreaTimer();
+            //GetIpArea();
+
             Console.ReadKey();   
         }
         private static void ReportArea(IQueryable<Area> areas)
@@ -134,7 +136,6 @@ namespace ado3
                 Console.WriteLine($"{item.Name} - {item.Start:dd:MM:yyyy}");
             }
         }
-
         private static void GroupJoinAreaTimer()
         {
             var timer = db.Timer.ToList();
@@ -148,5 +149,39 @@ namespace ado3
                 Console.WriteLine($"{item.Name,-70} - {item.Count.Count()}");
             }
         }
+        public static Array GetTimerArray()
+        {
+            return db.Area.ToArray();
+        }
+        public static Dictionary<int,string> GetIpArea()
+        {
+            var result = db.Area.Where(w=>w.IP!=null&&w.IP!="").ToDictionary(d => d.AreaId, d => d.IP);
+            return result;
+        }
+        public static ILookup<int, Area> GetIpArea2()
+        {
+            var result = db.Area.Where(w => w.IP != null && w.IP != "").ToLookup(d => d.AreaId, d => d);
+            return result;
+        }
+        public Area getAreaFirst()
+        {
+            Area area = db.Area.Where(w=>w.HiddenArea!=null)
+                               .FirstOrDefault(f => (bool)f.HiddenArea);
+            return area;
+        }
+
+        public Area getAreaLast()
+        {
+            Area area = db.Area.Where(w => w.PavilionId == 1)
+                              .FirstOrDefault(f => (bool)f.HiddenArea);
+            return area;
+        }
+
+        public void GetData()
+        {
+            bool s = db.Area.Any(a => a.PavilionId == 1);
+        }
+
+
     }
 }
