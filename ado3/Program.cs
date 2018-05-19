@@ -31,7 +31,8 @@ namespace ado3
             //RepeatIP();
             //TimerFromTo();
             //TimerDataI();
-            JoinAreaTimer();
+            //JoinAreaTimer();
+            GroupJoinAreaTimer();
             Console.ReadKey();   
         }
         private static void ReportArea(IQueryable<Area> areas)
@@ -131,6 +132,20 @@ namespace ado3
             foreach (var item in result)
             {
                 Console.WriteLine($"{item.Name} - {item.Start:dd:MM:yyyy}");
+            }
+        }
+
+        private static void GroupJoinAreaTimer()
+        {
+            var timer = db.Timer.ToList();
+            var area = db.Area.ToList();
+
+            var result = area.GroupJoin(timer, a => a.AreaId, t => t.AreaId, (a, t) => new { Name = a.FullName, Count = t}).Distinct();
+
+
+            foreach (var item in result)
+            {
+                Console.WriteLine($"{item.Name,-70} - {item.Count.Count()}");
             }
         }
     }
